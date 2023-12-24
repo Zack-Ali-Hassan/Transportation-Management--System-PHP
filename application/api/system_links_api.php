@@ -20,7 +20,8 @@ function fill_link($conn){
 function read_system_links($conn){
     $data =array();
     $message =array();
-    $query = "SELECT `link_id`, `link_name`, `link`, `category_id`, DATE(`date`) date FROM `system_links` WHERE 1"; 
+    $query = "SELECT `link_id`, `link_name`, `link`, `category_name`, date(system_links.date) as `date` 
+    FROM `system_links` INNER JOIN category on system_links.category_id = category.category_id"; 
     $result =$conn->query($query);
     if($result){
         while($row =$result->fetch_Assoc()){

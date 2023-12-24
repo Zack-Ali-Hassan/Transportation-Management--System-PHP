@@ -4,7 +4,8 @@ include "../config/conn.php";
 function read_system_actions($conn){
     $data =array();
     $message =array();
-    $query = "SELECT `action_id`, `action_name`, `action`, `link_id`, DATE(`date`) date FROM `system_actions` WHERE 1"; 
+    $query = "SELECT `action_id`, `action_name`, `action`, system_links.link_name, date(system_actions.date) as date
+     FROM `system_actions` INNER JOIN system_links on system_actions.link_id = system_links.link_id"; 
     $result =$conn->query($query);
     if($result){
         while($row =$result->fetch_Assoc()){
