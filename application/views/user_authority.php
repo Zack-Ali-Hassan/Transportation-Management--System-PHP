@@ -47,12 +47,20 @@ include_once "../includes/header.php";
                         </div>
 
                     </div>
-                    <form action="">
+                    <form action="" id="form_user_authority">
                         <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-success d-none" role="alert">
+                                    This is a success alert—check it out!
+                                </div>
+                                <div class="alert alert-danger d-none" role="alert">
+                                    This is a danger alert—check it out!
+                                </div>
+                            </div>
                             <div class="col-sm-12">
                                 <div class="mb-3">
                                     <select class="form-control" name="user_id" id="user_id">
-                                        <option value="0">Select User</option>
+
                                     </select>
                                 </div>
                             </div>
@@ -82,7 +90,7 @@ include_once "../includes/header.php";
                                                 </div>
                                             </fieldset>
                                         </div> -->
-                                       
+
                                     </div>
                                     <div>
                                         <button class="btn btn-outline-primary float-right mt-4 mb-5" type="submit" id="btn_add_user_authority">Authorize user</button>

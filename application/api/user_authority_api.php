@@ -1,23 +1,7 @@
 <?php
 header('Content-Type: application/json');
 include "../config/conn.php";
-function fill_link($conn){
-    $data =array();
-    $data_array =array();
-    $search_result =glob("../views/*.php");
-    foreach($search_result as $sr){
-       $pure_sr = explode("/", $sr);
-       $data_array[] = $pure_sr[2];
-    }
-    if(count($search_result) > 0){
-        $data = array("status" => true, "data" => $data_array);
-    }
-    else{
-        $data = array("status" => false, "data" => "Not found");
-    }
-    echo json_encode($data);
-}
-function read_system_authority($conn){
+function read_system_authority_view($conn){
     $data =array();
     $message =array();
     $query = "SELECT  * from system_authority_view"; 
@@ -33,10 +17,60 @@ function read_system_authority($conn){
     }
     echo json_encode($message);
 }
+function register_user_authority($conn){
+    extract($_POST);
+    $message =array();
+    $error_array =array();
+    $success_array = array();
+    $conn = new mysqli("localhost","root", "", "transportation");
+    $del = "DELETE FROM user_authority where user_id ='$user_id'";
+    $res = $conn->query($del);
+    if($res){
+        for($i=0; $i< count($action_id); $i++){
+            $query = "INSERT INTO `user_authority`(`user_id`, `action`) VALUES ('$user_id', '$action_id[$i]')"; 
+            $result =$conn->query($query);
+            if($result){
+                $success_array [] = array("status" => true, "message" => "Register successfully");
+            }
+            else{
+                $error_array [] = array("status" => false, "message" => $conn->error);
+            }
+        }    
+    }
+    else{
+        $error_array = array("status" => false, "message" => $conn->error);
+    }
+    if(count($success_array) > 0 && count($error_array) == 0){
+        $message = array("status" => true, "message" => "User has been authorized");
+    }
+    elseif(count($success_array) > 0){
+        $message = array("status" => false, "message" => $error_array);
+    }
+
+    if(count($error_array) > 0 && count($success_array) == 0){
+        $message = array("status" => false, "message" => $error_array);
+    }
+    echo json_encode($message);
+}
 
 
-
-
+function get_system_authority_sp($conn){
+    extract($_POST);
+    $data =array();
+    $message =array();
+    $query = "CALL get_system_authority_sp('$user_id')"; 
+    $result =$conn->query($query);
+    if($result){
+        while($row =$result->fetch_Assoc()){
+            $data[] = $row;
+        }
+        $message = array("status" => true, "message" => $data);
+    }
+    else{
+        $message = array("status" => false, "message" => $conn->error);
+    }
+    echo json_encode($message);
+}
 
 
 
