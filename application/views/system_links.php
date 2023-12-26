@@ -29,6 +29,7 @@ include_once "../includes/header.php";
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>Link Icon</th>
                                     <th>Link Name</th>
                                     <th>Link</th>
                                     <th>Category</th>
@@ -61,6 +62,10 @@ include_once "../includes/header.php";
                                         </div>
                                        
 
+                                        <div class="mb-3">
+                                            <label class="form-label">Link Icon</label>
+                                            <input id="link_icon" name="link_icon" type="text" class="form-control link_icon" placeholder="Enter link icon">
+                                        </div>
                                         <div class="mb-3">
                                             <label class="form-label">Link Name</label>
                                             <input id="link_name" name="link_name" type="text" class="form-control link_name" placeholder="Enter link name">

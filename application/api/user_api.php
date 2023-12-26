@@ -108,7 +108,7 @@ function update_user($conn)
 
         if (count($error_array) <= 0) {
 
-            $query = "UPDATE `users` SET `Username`='$username',`Email`='$email',`Password`='$password',`Type`='$type',`Status`='$status' WHERE user_id = '$update_info'";
+            $query = "UPDATE `users` SET `Username`='$username',`Email`='$email',`Password`= MD5('$password'),`Type`='$type',`Status`='$status' WHERE user_id = '$update_info'";
             $result = $conn->query($query);
             if ($result) {
                 move_uploaded_file($_FILES['user_image']['tmp_name'], '../uploads/' . $saved_name);

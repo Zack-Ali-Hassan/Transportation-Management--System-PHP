@@ -13,10 +13,11 @@
   <link rel="stylesheet" href="../ztoaster-main/ztoaster.css">
   <link rel="stylesheet" href="../ztoaster-main/ztoaster.min.css">
 </head>
+
 <body>
   <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-behavior="fixed" data-header-behavior="fixed">
     <!-- Sidebar Start -->
-    <aside class="left-sidebar">
+    <aside class="left-sidebar ">
       <!-- Sidebar scroll-->
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-center">
@@ -30,7 +31,9 @@
         </div>
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <ul id="sidebarnav">
+       
+          <ul id="user_menu" name= "user_menu"> </ul>
+          <!-- <ul id="sidebarnav">
             <li class="nav-small-cap">
               <i class=""></i>
               <span class="hide-menu "> Home</span>
@@ -163,7 +166,7 @@
                 <span class="hide-menu">Report 1</span>
               </a>
             </li>
-          </ul>
+          </ul> -->
 
         </nav>
         <!-- End Sidebar navigation -->
@@ -171,3 +174,5 @@
       <!-- End Sidebar scroll-->
     </aside>
     <!--  Sidebar End -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="../js/sidebar.js"></script>

@@ -23,10 +23,10 @@
                             <div class="card-body">
                               
                                 <p class="text-center" style="color : black; font-weight: bold; font-size : 30px">Login</p>
-                                <form enctype="multipart/form-data" method="post">
+                                <form enctype="multipart/form-data" id = "login_form">
                                     <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+                                        <label for="exampleInputEmail1" class="form-label">Username</label>
+                                        <input type="text" name="username" id="username" class="form-control" aria-describedby="emailHelp" placeholder="Enter username">
                                     </div>
                                     <div class="mb-4">
                                         <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -36,13 +36,14 @@
                                         <div class="form-check">
                                             <input class="form-check-input info" type="checkbox" value="" id="flexCheckChecked" checked>
                                             <label class="form-check-label text-dark" for="flexCheckChecked">
-                                                Remeber me
+                                                Remember me
                                             </label>
                                         </div>
                                         <a class="text-info fw-bold" href="register.php">Forgot Password ?</a>
                                     </div>
-                                    <a href="./index.php" class="btn btn-info w-100 py-8 fs-4 mb-4 rounded-2">Log in</a>
-                                    <div class="d-flex align-items-center justify-content-end">
+                                    <button class="btn btn-info w-100 py-8 fs-4 mb-4 rounded-2" type= "submit">Log in</button>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                    <p class="fs-4 mb-0 fw-bold">i don't have an Account?</p>
                                         <a class="text-info fw-bold ms-2" href="register.php">Create an account</a>
                                     </div>
                                 </form>
@@ -59,3 +60,6 @@
 </body>
 
 </html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="../js/login.js"></script>

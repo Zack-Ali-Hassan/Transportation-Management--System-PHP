@@ -20,7 +20,7 @@ function fill_link($conn){
 function read_system_links($conn){
     $data =array();
     $message =array();
-    $query = "SELECT `link_id`, `link_name`, `link`, `category_name`, date(system_links.date) as `date` 
+    $query = "SELECT `link_id`, `link_icon`, `link_name`, `link`, `category_name`, date(system_links.date) as `date` 
     FROM `system_links` INNER JOIN category on system_links.category_id = category.category_id"; 
     $result =$conn->query($query);
     if($result){
@@ -55,7 +55,7 @@ function read_single_system_link($conn){
 function register_system_link($conn){
     extract($_POST);
     $message =array();
-    $query = "INSERT INTO `system_links`(`link_name`, `link`, `category_id`) VALUES ('$link_name', '$link', '$category_id')"; 
+    $query = "INSERT INTO `system_links`(`link_icon`,`link_name`, `link`, `category_id`) VALUES ('$link_icon','$link_name', '$link', '$category_id')"; 
     $result =$conn->query($query);
     if($result){
         $message = array("status" => true, "message" => "Register successfully");
@@ -68,7 +68,7 @@ function register_system_link($conn){
 function update_system_link($conn){
     extract($_POST);
     $message =array();
-    $query = "UPDATE `system_links` SET
+    $query = "UPDATE `system_links` SET `link_icon`='$link_icon',
     `link_name`='$link_name',`link`='$link',`category_id`='$category_id' WHERE link_id = $id"; 
     $result =$conn->query($query);
     if($result){

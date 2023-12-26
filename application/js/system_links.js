@@ -8,6 +8,7 @@ $("#btn_add_system_link").on("click", function () {
 $("#form_system_link").on("submit", function (event) {
   event.preventDefault();
 
+  let link_icon = $("#link_icon").val();
   let link_name = $("#link_name").val();
   let link = $("#link").val();
   let category_id = $("#category_id").val();
@@ -16,6 +17,7 @@ $("#form_system_link").on("submit", function (event) {
   if (btn_Action == "Insert") {
     sending_data = {
       action: "register_system_link",
+      link_icon,
       link_name,
       link,
       category_id,
@@ -23,6 +25,7 @@ $("#form_system_link").on("submit", function (event) {
   } else {
     sending_data = {
       id,
+      link_icon,
       link_name,
       link,
       category_id,
@@ -216,6 +219,7 @@ function fetch_system_link(id) {
         btn_Action = "Update";
         $("#modal_system_link").modal("show");
         $("#update_info").val(response[0].link_id);
+        $("#link_icon").val(response[0].link_icon);
         $("#link_name").val(response[0].link_name);
         $("#link").val(response[0].link);
         $("#category_id").val(response[0].category_id);

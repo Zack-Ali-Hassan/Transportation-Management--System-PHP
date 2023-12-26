@@ -71,6 +71,23 @@ function get_system_authority_sp($conn){
     }
     echo json_encode($message);
 }
+function get_system_menu_sp($conn){
+    extract($_POST);
+    $data =array();
+    $message =array();
+    $query = "CALL get_system_menu_sp('hl004')"; 
+    $result =$conn->query($query);
+    if($result){
+        while($row =$result->fetch_Assoc()){
+            $data[] = $row;
+        }
+        $message = array("status" => true, "message" => $data);
+    }
+    else{
+        $message = array("status" => false, "message" => $conn->error);
+    }
+    echo json_encode($message);
+}
 
 
 
