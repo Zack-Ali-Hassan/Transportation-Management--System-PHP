@@ -1,4 +1,7 @@
+<?php
 
+
+?>
 <!--  Main wrapper -->
 <div class="body-wrapper">
   <!--  Header Start -->

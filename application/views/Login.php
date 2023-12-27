@@ -1,3 +1,10 @@
+
+<?php
+session_start();
+session_unset();
+session_destroy();
+
+?>
 <!doctype html>
 <html lang="en">
 
@@ -25,6 +32,16 @@
                                 <p class="text-center" style="color : black; font-weight: bold; font-size : 30px">Login</p>
                                 <div class="row">
                                     <div class="col-sm-12">
+                                        <?php
+                                        if(isset($_GET['access'])){
+                                            ?>
+  <div class="alert alert-danger" role="alert">
+                                            <?php echo $_GET['access']?>
+                                        </div>
+                                            <?php
+                                        }
+                                        
+                                        ?>
                                         <div class="alert alert-success d-none" role="alert">
                                             This is a success alert—check it out!
                                         </div>

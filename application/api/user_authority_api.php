@@ -75,7 +75,7 @@ function get_system_menu_sp($conn){
     extract($_POST);
     $data =array();
     $message =array();
-    $query = "CALL get_system_menu_sp('hl004')"; 
+    $query = "CALL get_system_menu_sp('hl001')"; 
     $result =$conn->query($query);
     if($result){
         while($row =$result->fetch_Assoc()){

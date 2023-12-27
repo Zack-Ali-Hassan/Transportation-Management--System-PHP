@@ -1,5 +1,5 @@
 <?php
-
+include_once "../includes/sessions.php";
 include_once "../includes/sidebar.php";
 
 include_once "../includes/header.php";

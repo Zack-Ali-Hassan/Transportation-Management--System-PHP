@@ -120,7 +120,7 @@ function update_user($conn)
             $message = array("status" => false, "message" => $error_array);
         }
     } else {
-        $query = "UPDATE `users` SET `Username`='$username',`Email`='$email',`Password`='$password',`Type`='$type',`Status`='$status' WHERE user_id = '$update_info'";
+        $query = "UPDATE `users` SET `Username`='$username',`Email`='$email',`Password`=MD5('$password'),`Type`='$type',`Status`='$status' WHERE user_id = '$update_info'";
         $result = $conn->query($query);
         if ($result) {
             $message = array("status" => true, "message" => "Updated successfully");

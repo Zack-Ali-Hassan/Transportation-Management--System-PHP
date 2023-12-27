@@ -22,8 +22,8 @@
       <div>
         <div class="brand-logo d-flex align-items-center justify-content-center">
           <a href="./index.php" class="text-nowrap logo-img">
-            <img src="../../assets/images/logos/fav.png" width="90" height="90" alt="not found" class="mt-2" />
-            <!-- <h2><span style="color: red;">Transportation</span></h2> -->
+            <!-- <img src="../../assets/images/logos/fav.png" width="90" height="90" alt="not found" class="mt-2" /> -->
+            <h2><span style="color: black; font-weight : bold; font-size : 33px;">Transportation</span></h2>
           </a>
           <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
             <i class="ti ti-x fs-8"></i>

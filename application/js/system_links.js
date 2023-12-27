@@ -190,12 +190,20 @@ function delete_system_link(id) {
         loadData();
       }
       else{
-        displayAlert("error", response);
+        Swal.fire({
+          title: "Error",
+          text: response,
+          icon: "danger",
+        });
       }
     },
     error: function (data) {
-    //   alert("Unknown error...");
-    displayAlert("error", data.responseText);
+      Swal.fire({
+        title: "Error",
+        text: data.responseText,
+        icon: "danger",
+      });
+    // displayAlert("error", data.responseText);
       // let errorMessage = xhr.responseText;
       // alert("Error: " + errorMessage);
     },

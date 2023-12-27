@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 header('Content-Type: application/json');
 include "../config/conn.php";
 function login($conn)
@@ -19,11 +19,16 @@ function login($conn)
             else{
                 $message = array("status" => false, "message" => "User are locked, can not access system....");
             }
-        }
+        }   
         else{
-            foreach($row as $key =>$value){
-                $_SESSION[$key] = $value;
-            }
+            session_start();
+            
+            $_SESSION['user_id']=$row['user_id'];
+            $_SESSION['username']=$row['username'];
+            $_SESSION['user_image']=$row['user_image'];
+            // foreach($row as $key =>$value){
+            //     $_SESSION[$key] = $value;
+            // }
             $message = array("status" => true, "message" => "Login successfull..");
         }
        

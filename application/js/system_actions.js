@@ -217,12 +217,11 @@ function displayAlert(type, message) {
     success.classList = "alert alert-success";
     error.classList = "alert alert-danger d-none";
     success.innerHTML = message;
-    // setTimeout(() => {
+    setTimeout(() => {
       success.classList = "alert alert-success d-none";
-
-      // $("#modal_system_action").modal("hide");
+      $("#modal_system_action").modal("hide");
       $("#form_system_action")[0].reset();
-    // }, 3000);
+    }, 3000);
   } else {
     error.classList = "alert alert-danger";
     success.classList = "alert alert-success d-none";
