@@ -21,9 +21,19 @@
                     <div class="col-md-8 col-lg-6 col-xxl-3">
                         <div class="card mb-0">
                             <div class="card-body">
-                              
+
                                 <p class="text-center" style="color : black; font-weight: bold; font-size : 30px">Login</p>
-                                <form enctype="multipart/form-data" id = "login_form">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="alert alert-success d-none" role="alert">
+                                            This is a success alert—check it out!
+                                        </div>
+                                        <div class="alert alert-danger d-none" role="alert">
+                                            This is a danger alert—check it out!
+                                        </div>
+                                    </div>
+                                </div>
+                                <form enctype="multipart/form-data" id="login_form">
                                     <div class="mb-3">
                                         <label for="exampleInputEmail1" class="form-label">Username</label>
                                         <input type="text" name="username" id="username" class="form-control" aria-describedby="emailHelp" placeholder="Enter username">
@@ -41,9 +51,9 @@
                                         </div>
                                         <a class="text-info fw-bold" href="register.php">Forgot Password ?</a>
                                     </div>
-                                    <button class="btn btn-info w-100 py-8 fs-4 mb-4 rounded-2" type= "submit">Log in</button>
+                                    <button class="btn btn-info w-100 py-8 fs-4 mb-4 rounded-2" type="submit">Log in</button>
                                     <div class="d-flex align-items-center justify-content-center">
-                                    <p class="fs-4 mb-0 fw-bold">i don't have an Account?</p>
+                                        <p class="fs-4 mb-0 fw-bold">i don't have an Account?</p>
                                         <a class="text-info fw-bold ms-2" href="register.php">Create an account</a>
                                     </div>
                                 </form>
