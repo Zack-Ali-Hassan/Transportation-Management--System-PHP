@@ -4,7 +4,7 @@ include "../config/conn.php";
 function read_system_authority_view($conn){
     $data =array();
     $message =array();
-    $query = "SELECT  * from system_authority_view"; 
+    $query = "SELECT  * from system_auth_view"; 
     $result =$conn->query($query);
     if($result){
         while($row =$result->fetch_Assoc()){
@@ -52,8 +52,6 @@ function register_user_authority($conn){
     }
     echo json_encode($message);
 }
-
-
 function get_system_authority_sp($conn){
     extract($_POST);
     $data =array();
@@ -75,7 +73,9 @@ function get_system_menu_sp($conn){
     extract($_POST);
     $data =array();
     $message =array();
-    $query = "CALL get_system_menu_sp('hl001')"; 
+    session_start();
+    $user_id =  $_SESSION['user_id'];
+    $query = "CALL get_system_menu_sp('$user_id')"; 
     $result =$conn->query($query);
     if($result){
         while($row =$result->fetch_Assoc()){

@@ -74,23 +74,6 @@ include_once "../includes/header.php";
                                         All Authorities
                                     </legend>
                                     <div class="row" id="authority_area" name="authority_area">
-                                        <!-- <div class="col-sm-4">
-                                            <fieldset class="authority-border">
-                                                <legend class="authority-border">
-                                                    <input type="checkbox" id="all_authority" name="all_authority" class="me-3">
-                                                    Dashboard
-                                                </legend>
-                                                <div class="system_links">
-                                                    <input type="checkbox" id="all_authority" name="all_authority" class="me-3 ms-4">
-                                                    Dashboard
-                                                </div>
-                                                <div class="system_actions">
-                                                    <input type="checkbox" id="all_authority" name="all_authority" class="me-3 ms-5">
-                                                    Register dashboard
-                                                </div>
-                                            </fieldset>
-                                        </div> -->
-
                                     </div>
                                     <div>
                                         <button class="btn btn-outline-primary float-right mt-4 mb-5" type="submit" id="btn_add_user_authority">Authorize user</button>

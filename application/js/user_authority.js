@@ -92,18 +92,18 @@ function loadData() {
                 `;
               system_link = item["link_name"];
             }
-            if (item["action_name"] !== system_action) {
-              html += `
-                <div class="system_actions">
-                <label class="control-label input-label">
-                <input type="checkbox" style =" margin-left : 75px; margin-bottom : 20px" id="system_actions[]" name="system_actions[]"
-                value = "${item["action_id"]}" link_id = "${item["link_id"]}" role = "${item["role"]}" category_id ="${item["category_id"]}" action_id = "${item["action_id"]}">
-                ${item["action_name"]}
-                </label>
-                </div>
-                `;
-              system_action = item["action_name"];
-            }
+            // if (item["action_name"] !== system_action) {
+            //   html += `
+            //     <div class="system_actions">
+            //     <label class="control-label input-label">
+            //     <input type="checkbox" style =" margin-left : 75px; margin-bottom : 20px" id="system_actions[]" name="system_actions[]"
+            //     value = "${item["action_id"]}" link_id = "${item["link_id"]}" role = "${item["role"]}" category_id ="${item["category_id"]}" action_id = "${item["action_id"]}">
+            //     ${item["action_name"]}
+            //     </label>
+            //     </div>
+            //     `;
+            //   system_action = item["action_name"];
+            // }
           }
         });
 
@@ -163,7 +163,7 @@ function loadUserPermissions(id) {
           response.forEach(user =>{
             $(`input[type = 'checkbox'][name = 'role_authority[]'][value = '${user['role']}']`).prop('checked', true);
             $(`input[type = 'checkbox'][name = 'system_links[]'][value = '${user['link_id']}']`).prop('checked', true);
-            $(`input[type = 'checkbox'][name = 'system_actions[]'][value = '${user['action_id']}']`).prop('checked', true);
+            // $(`input[type = 'checkbox'][name = 'system_actions[]'][value = '${user['action_id']}']`).prop('checked', true);
           })
         }
         else{
