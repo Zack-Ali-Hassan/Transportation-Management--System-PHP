@@ -25,7 +25,11 @@ function login($conn)
             
             $_SESSION['user_id']=$row['user_id'];
             $_SESSION['username']=$row['username'];
+            $_SESSION['email']=$row['email'];
+            $_SESSION['password']=$row['password'];
             $_SESSION['user_image']=$row['user_image'];
+            $_SESSION['type']=$row['type'];
+            $_SESSION['status']=$row['status'];
             // foreach($row as $key =>$value){
             //     $_SESSION[$key] = $value;
             // }

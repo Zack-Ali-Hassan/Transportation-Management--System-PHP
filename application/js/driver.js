@@ -12,45 +12,71 @@ $("#form_driver").on("submit", (event) => {
   let email = $("#email").val();
   let vehicle_id = $("#vehicle").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_driver",
-      name,
-      mobile,
-      email,
-      vehicle_id,
-    };
-  } else {
-    sending_data = {
-      id,
-      name,
-      mobile,
-      email,
-      vehicle_id,
-      action: "update_driver",
-    };
-  }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/driver_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+
+   //checking inputs
+   const isValidMobile = /^61\d{7}$/.test(mobile);
+   function isValidEmail(email) {
+     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+     return emailPattern.test(email);
+   } 
+   const isValid = isValidEmail(email);
+  if (name == "") {
+    displayAlert("error", "Please enter a driver name");
+  } else if (mobile == "") {
+    displayAlert("error", "Please enter a mobile");
+  } else if (email == "") {
+    displayAlert("error", "Please enter a email");
+  } else if (vehicle_id == '') {
+    displayAlert("error", "Please select a vehicle");
+  } else if (!isValidMobile) {
+    displayAlert("error", "Please enter a valid mobile");
+  } else if (!isValid) {
+    displayAlert("error", "Please enter a valid email");
+  } else {
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_driver",
+        name,
+        mobile,
+        email,
+        vehicle_id,
+      };
+    } else {
+      sending_data = {
+        id,
+        name,
+        mobile,
+        email,
+        vehicle_id,
+        action: "update_driver",
+      };
+    }
+
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/driver_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        }
+        else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -80,11 +106,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_driver tbody").append(tr);
-        $("#table_driver").DataTable()
+        $("#table_driver").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -100,17 +136,17 @@ function fillVehicle() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += `<option value="0">Select vehicle</option>`;
+        html += `<option value="">Select vehicle</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['vehicle_id']}>${item['vehicle_number']}</option>`;
+          html += ` <option value=${item["vehicle_id"]}>${item["vehicle_number"]}</option>`;
         });
         $("#vehicle").append(html);
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      alert("Unknow error");
     },
   });
 }
@@ -133,16 +169,24 @@ function delete_driver(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -168,12 +212,12 @@ function fetch_driver(id) {
         $("#mobile").val(response[0].mobile);
         $("#email").val(response[0].email);
         $("#vehicle").val(response[0].vehicle_id);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -188,7 +232,6 @@ $("#table_driver").on("click", "a.delete_info", function () {
     delete_driver(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

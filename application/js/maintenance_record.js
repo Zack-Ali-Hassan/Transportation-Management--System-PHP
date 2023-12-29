@@ -11,45 +11,57 @@ $("#form_maintenance_record").on("submit", (event) => {
   let cost = $("#cost").val();
   let vehicle_id = $("#vehicle").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_maintenance_record",
-      Maintenance_type,
-      description,
-      cost,
-      vehicle_id,
-    };
+  if (Maintenance_type == "") {
+    displayAlert("error", "Please enter a maintenance type");
+  } else if (description == "") {
+    displayAlert("error", "Please enter a description fuel");
+  }  else if (cost == "") {
+    displayAlert("error", "Please enter a cost");
+  } else if (vehicle_id == "") {
+    displayAlert("error", "Please select a vehicle");
   } else {
-    sending_data = {
-      id,
-      Maintenance_type,
-      description,
-      cost,
-      vehicle_id,
-      action: "update_maintenance_record",
-    };
-  }
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_maintenance_record",
+        Maintenance_type,
+        description,
+        cost,
+        vehicle_id,
+      };
+    } else {
+      sending_data = {
+        id,
+        Maintenance_type,
+        description,
+        cost,
+        vehicle_id,
+        action: "update_maintenance_record",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/maintenance_record_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/maintenance_record_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -79,11 +91,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_maintenance_record tbody").append(tr);
-        $("#table_maintenance_record").DataTable()
+        $("#table_maintenance_record").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -99,17 +121,17 @@ function fillVehicle() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += ` <option value="0">Select vehicle</option>`;
+        html += ` <option value="">Select vehicle</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['vehicle_id']}>${item['vehicle_number']}</option>`;
+          html += ` <option value=${item["vehicle_id"]}>${item["vehicle_number"]}</option>`;
         });
         $("#vehicle").append(html);
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      alert("Unknow error");
     },
   });
 }
@@ -132,16 +154,24 @@ function delete_maintenance(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -167,12 +197,12 @@ function fetch_maintenance(id) {
         $("#description").val(response[0].description);
         $("#cost").val(response[0].cost);
         $("#vehicle").val(response[0].vehicle_id);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -183,11 +213,14 @@ $("#table_maintenance_record").on("click", "a.update_info", function () {
 });
 $("#table_maintenance_record").on("click", "a.delete_info", function () {
   let id = $(this).attr("delete_info");
-  if (confirm(`Are you sure you want to delete this maintenance record id : ${id}`)) {
+  if (
+    confirm(
+      `Are you sure you want to delete this maintenance record id : ${id}`
+    )
+  ) {
     delete_maintenance(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

@@ -64,7 +64,7 @@ include_once "../includes/header.php";
                     </div>
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Name</label>
-                      <input id="name" name="name" type="text" class="form-control name" placeholder="Enter name" required>
+                      <input id="name" name="name" type="text" class="form-control name" placeholder="Enter name" >
                     </div>
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Gender</label>
@@ -75,15 +75,15 @@ include_once "../includes/header.php";
                     </div>
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Address</label>
-                      <input type="text" class="form-control address" id="address" name="address" placeholder="Enter address" required>
+                      <input type="text" class="form-control address" id="address" name="address" placeholder="Enter address" >
                     </div>
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Mobile</label>
-                      <input type="tel" class="form-control mobile" id="mobile" name="mobile" placeholder="Enter mobile" required>
+                      <input type="tel" class="form-control mobile" id="mobile" name="mobile" placeholder="Enter mobile" >
                     </div>
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Email</label>
-                      <input type="email" class="form-control email" id="email" name="email" placeholder="Enter email" required>
+                      <input type="email" class="form-control email" id="email" name="email" placeholder="Enter email" >
                     </div>
                 </div>
                 <div class="modal-footer">

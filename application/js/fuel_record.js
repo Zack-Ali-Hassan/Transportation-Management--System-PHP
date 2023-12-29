@@ -12,45 +12,55 @@ $("#form_fuel_record").on("submit", (event) => {
   let cost = $("#cost").val();
   let vehicle_id = $("#vehicle").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_fuel_record",
-      fuel_type,
-      quantity,
-      cost,
-      vehicle_id,
-    };
-  } else {
-    sending_data = {
-      id,
-      fuel_type,
-      quantity,
-      cost,
-      vehicle_id,
-      action: "update_fuel_record",
-    };
-  }
+  if (quantity == "") {
+    displayAlert("error", "Please enter a quantity fuel");
+  } else if (cost == "") {
+    displayAlert("error", "Please enter a cost");
+  } else if (vehicle_id == "") {
+    displayAlert("error", "Please select a vehicle");
+  }else {
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_fuel_record",
+        fuel_type,
+        quantity,
+        cost,
+        vehicle_id,
+      };
+    } else {
+      sending_data = {
+        id,
+        fuel_type,
+        quantity,
+        cost,
+        vehicle_id,
+        action: "update_fuel_record",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/fuel_record_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/fuel_record_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -80,11 +90,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_fuel_record tbody").append(tr);
-        $("#table_fuel_record").DataTable()
+        $("#table_fuel_record").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -100,17 +120,17 @@ function fillVehicle() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += ` <option value="0">Select vehicle</option>`;
+        html += ` <option value="">Select vehicle</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['vehicle_id']}>${item['vehicle_number']}</option>`;
+          html += ` <option value=${item["vehicle_id"]}>${item["vehicle_number"]}</option>`;
         });
         $("#vehicle").append(html);
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      alert("Unknow error");
     },
   });
 }
@@ -133,16 +153,24 @@ function delete_fuel(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -168,12 +196,12 @@ function fetch_fuel(id) {
         $("#quantity").val(response[0].quantity);
         $("#cost").val(response[0].cost);
         $("#vehicle").val(response[0].vehicle_id);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -188,7 +216,6 @@ $("#table_fuel_record").on("click", "a.delete_info", function () {
     delete_fuel(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

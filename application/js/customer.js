@@ -12,47 +12,77 @@ $("#form_customer").on("submit", (event) => {
   let mobile = $("#mobile").val();
   let email = $("#email").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_customer",
-      name,
-      gender,
-      address,
-      mobile,
-      email,
-    };
-  } else {
-    sending_data = {
-      id,
-      name,
-      gender,
-      address,
-      mobile,
-      email,
-      action: "update_customer",
-    };
-  }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/customers_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+  //checking inputs
+  const isValidMobile = /^61\d{7}$/.test(mobile);
+  function isValidEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
+  } 
+  const isValid = isValidEmail(email);
+  if (name == "") {
+    displayAlert("error", "Please enter a name");
+  } 
+  else if (address == "") {
+    displayAlert("error", "Please enter a address");
+  } 
+  else if (mobile == "") {
+    displayAlert("error", "Please enter a mobile");
+  } 
+  else if (email == "") {
+    displayAlert("error", "Please enter a email");
+  }
+  else if(!isValidMobile){
+    displayAlert("error", "Please enter a valid mobile");
+  }
+  else if(!isValid){
+    displayAlert("error", "Please enter a valid email");
+  } 
+  else {
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_customer",
+        name,
+        gender,
+        address,
+        mobile,
+        email,
+      };
+    } else {
+      sending_data = {
+        id,
+        name,
+        gender,
+        address,
+        mobile,
+        email,
+        action: "update_customer",
+      };
+    }
+
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/customers_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -73,7 +103,6 @@ function loadData() {
         let html = "";
         let tr = "";
         response.forEach((item) => {
-          
           tr += "<tr>";
           for (let data in item) {
             tr += `<td>${item[data]}</td>`;
@@ -82,15 +111,13 @@ function loadData() {
          &nbsp;&nbsp <a class="btn btn-danger delete_info" delete_info =${item["customer_id"]}><i class="fas fa-trash"></i></a></td>`;
           tr += "</tr>";
         });
-        console.log(tr)
         $("#table_customer tbody").append(tr);
-      
-        $("#table_customer").DataTable()
+
+        $("#table_customer").DataTable();
       }
-    
     },
     error: function (data) {
-      console.log("errror: " + data);
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -109,20 +136,31 @@ function delete_customer(id) {
     success: function (data) {
       let status = data.status;
       let response = data.message;
+      console.log(response)
       if (status) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
       }
+      else{
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
+      }
+      
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -169,7 +207,6 @@ $("#table_customer").on("click", "a.delete_info", function () {
     delete_customer(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

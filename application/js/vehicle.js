@@ -13,49 +13,59 @@ $("#form_vehicle").on("submit", (event) => {
   let location = $("#location").val();
   let status = $("#status").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_vehicle",
-      vehicle_number,
-      type,
-      fuel_type,
-      capacity,
-      location,
-      status,
-    };
+  if (vehicle_number == "") {
+    displayAlert("error", "Please enter a vehicle number");
+  } else if (capacity == "") {
+    displayAlert("error", "Please enter a capacity");
+  } else if (location == "") {
+    displayAlert("error", "Please enter a location");
   } else {
-    sending_data = {
-      id,
-      vehicle_number,
-      type,
-      fuel_type,
-      capacity,
-      location,
-      status,
-      action: "update_vehicle",
-    };
-  }
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_vehicle",
+        vehicle_number,
+        type,
+        fuel_type,
+        capacity,
+        location,
+        status,
+      };
+    } else {
+      sending_data = {
+        id,
+        vehicle_number,
+        type,
+        fuel_type,
+        capacity,
+        location,
+        status,
+        action: "update_vehicle",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/vehicle_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/vehicle_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -63,8 +73,7 @@ function loadData() {
   let send_data = {
     action: "read_vehicles",
   };
-  // <a class="btn btn-primary update_info mr-2" update_info =${item["vehicle_id"]} ></a>
-  // <a class="btn btn-danger delete_info" delete_info =${item["vehicle_id"]}><i class="fas fa-trash"></i></a>
+
   $.ajax({
     method: "POST",
     dataType: "JSON",
@@ -90,11 +99,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_vehicle tbody").append(tr);
-        $("#table_vehicle").DataTable()
+        $("#table_vehicle").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -117,16 +136,24 @@ function delete_vehicle(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -154,12 +181,12 @@ function fetch_vehicle(id) {
         $("#capacity").val(response[0].capacity);
         $("#location").val(response[0].location);
         $("#status").val(response[0].status);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -174,7 +201,6 @@ $("#table_vehicle").on("click", "a.delete_info", function () {
     delete_vehicle(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");
