@@ -124,3 +124,120 @@ function loadData() {
     },
   });
 }
+$(function () {
+    let send_data = {
+        action: "get_customer_payment",
+      };
+  $.ajax({
+    method: "POST",
+    dataType: "JSON",
+    url: "../api/index_api.php",
+    data: send_data,
+    success: function (data) {
+      let status = data.status;
+      let response = data.message;
+
+      if (status) {
+        let name =[];
+        let amount = [];
+        response.forEach((item) => {
+            name.push(item['name']);
+            amount.push(item['Amount']);
+        });
+        // =====================================
+        // Profit
+        // =====================================
+        var chart = {
+          series: [
+            {
+              name: "amount:",
+              data: amount,
+            },
+          ],
+
+          chart: {
+            type: "bar",
+            height: 345,
+            offsetX: -15,
+            toolbar: { show: true },
+            foreColor: "#adb0bb",
+            fontFamily: "inherit",
+            sparkline: { enabled: false },
+          },
+
+          colors: ["#49BEFF"],
+
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: "35%",
+              borderRadius: [2],
+              borderRadiusApplication: "end",
+              borderRadiusWhenStacked: "all",
+            },
+          },
+          markers: { size: 0 },
+
+          dataLabels: {
+            enabled: false,
+          },
+
+          legend: {
+            show: false,
+          },
+
+          grid: {
+            borderColor: "rgba(0,0,0,0.1)",
+            strokeDashArray: 3,
+            xaxis: {
+              lines: {
+                show: false,
+              },
+            },
+          },
+
+          xaxis: {
+            type: "category",
+            categories:name,
+            labels: {
+              style: { cssClass: "grey--text lighten-2--text fill-color" },
+            },
+          },
+
+          yaxis: {
+            show: true,
+            labels: {
+              style: {
+                cssClass: "grey--text lighten-2--text fill-color",
+              },
+            },
+          },
+          stroke: {
+            show: true,
+            width: 3,
+            lineCap: "butt",
+            colors: ["transparent"],
+          },
+
+          tooltip: { theme: "light" },
+
+          responsive: [
+            {
+              breakpoint: 600,
+              options: {
+                plotOptions: {
+                  bar: {
+                    borderRadius: 3,
+                  },
+                },
+              },
+            },
+          ],
+        };
+
+        var chart = new ApexCharts(document.querySelector("#chart"), chart);
+        chart.render();
+      }
+    },
+  });
+});

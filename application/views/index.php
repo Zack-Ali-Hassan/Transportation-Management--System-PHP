@@ -15,16 +15,9 @@ include_once "../includes/header.php";
               <div class="card-body">
                 <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
                   <div class="mb-3 mb-sm-0">
-                    <h5 class="card-title fw-semibold">Sales Overview</h5>
+                    <h5 class="card-title fw-semibold">Customer Payments</h5>
                   </div>
-                  <div>
-                    <select class="form-select">
-                      <option value="1">March 2023</option>
-                      <option value="2">April 2023</option>
-                      <option value="3">May 2023</option>
-                      <option value="4">June 2023</option>
-                    </select>
-                  </div>
+                 
                 </div>
                 <div id="chart"></div>
               </div>
@@ -40,7 +33,7 @@ include_once "../includes/header.php";
                     <div class="row alig n-items-start">
                       <div class="col-8">
                         <h5 class="card-title mb-9 fw-semibold"> Total Fuel Cost </h5>
-                        <h4 class="fw-semibold mb-3" id="total_fuel_cost">$6,820</h4>
+                        <h4 class="fw-semibold mb-3" id="total_fuel_cost">$0</h4>
                         <div class="d-flex align-items-center pb-1">
                           <span
                             class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
@@ -70,7 +63,7 @@ include_once "../includes/header.php";
                     <div class="row alig n-items-start">
                       <div class="col-8">
                         <h5 class="card-title mb-9 fw-semibold"> Total Maintenance Cost </h5>
-                        <h4 class="fw-semibold mb-3" id="total_maintenance_cost">$6,820</h4>
+                        <h4 class="fw-semibold mb-3" id="total_maintenance_cost">$0</h4>
                         <div class="d-flex align-items-center pb-1">
                           <span
                             class="me-2 rounded-circle bg-light-danger round-20 d-flex align-items-center justify-content-center">
@@ -129,24 +122,7 @@ include_once "../includes/header.php";
                       </tr>
                     </thead>
                     <tbody>
-                      <!-- <tr>
-                        <td class="border-bottom-0"><h6 class="fw-semibold mb-0">1</h6></td>
-                        <td class="border-bottom-0">
-                            <h6 class="fw-semibold mb-1">Sunil Joshi</h6>
-                            <span class="fw-normal">Web Designer</span>                          
-                        </td>
-                        <td class="border-bottom-0">
-                          <p class="mb-0 fw-normal">Elite Admin</p>
-                        </td>
-                        <td class="border-bottom-0">
-                          <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-primary rounded-3 fw-semibold">Low</span>
-                          </div>
-                        </td>
-                        <td class="border-bottom-0">
-                          <h6 class="fw-semibold mb-0 fs-4">$3.9</h6>
-                        </td>
-                      </tr>  -->
+                      
                                         
                     </tbody>
                   </table>
