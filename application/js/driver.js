@@ -211,7 +211,7 @@ function fetch_driver(id) {
         $("#name").val(response[0].name);
         $("#mobile").val(response[0].mobile);
         $("#email").val(response[0].email);
-        $("#vehicle").val(response[0].vehicle_id);
+        $("#vehicle").val(response[0].VehicleID);
       } else {
         displayAlert("error", response);
       }
