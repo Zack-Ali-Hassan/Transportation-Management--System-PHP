@@ -6,34 +6,89 @@ function read_maintenance_report($conn)
     extract($_POST);
     $data = array();
     $message = array();
-    if($report_type == "All"){
+    if ($report_type == "All") {
         $query = "
         SELECT
             Vehicles.vehicle_number,
             MaintenanceRecords.Maintenance_type,
             MaintenanceRecords.Description,
             MaintenanceRecords.Cost,
-            date(MaintenanceRecords.maintenance_date) maintenance_date
+            DATE(MaintenanceRecords.maintenance_date) AS maintenance_date
         FROM
             MaintenanceRecords
         LEFT JOIN
             Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
-            WHERE maintenancerecords.vehicle_id like '%$vehicle_id'";
-    }
-    else{
+        WHERE
+            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%'
+
+        UNION ALL
+        SELECT
+            'Total',
+            '',
+            '',
+            COALESCE(SUM(MaintenanceRecords.Cost), 0),
+            ''
+        FROM
+            MaintenanceRecords
+        LEFT JOIN
+            Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
+        WHERE
+            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%'";
+        // $query = "
+        // SELECT
+        //     Vehicles.vehicle_number,
+        //     MaintenanceRecords.Maintenance_type,
+        //     MaintenanceRecords.Description,
+        //     MaintenanceRecords.Cost,
+        //     date(MaintenanceRecords.maintenance_date) maintenance_date
+        // FROM
+        //     MaintenanceRecords
+        // LEFT JOIN
+        //     Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
+        //     WHERE maintenancerecords.vehicle_id like '%$vehicle_id'";
+    } else {
         $query = "
         SELECT
             Vehicles.vehicle_number,
             MaintenanceRecords.Maintenance_type,
             MaintenanceRecords.Description,
             MaintenanceRecords.Cost,
-            date(MaintenanceRecords.maintenance_date) maintenance_date
+            DATE(MaintenanceRecords.maintenance_date) AS maintenance_date
         FROM
             MaintenanceRecords
         LEFT JOIN
             Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
-            WHERE maintenancerecords.vehicle_id like '%$vehicle_id' and 
+            WHERE
+            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%' and 
+            MaintenanceRecords.maintenance_date BETWEEN '$start_date' and '$end_date'
+
+        UNION ALL
+        SELECT
+            'Total',
+            '',
+            '',
+            COALESCE(SUM(MaintenanceRecords.Cost), 0),
+            ''
+        FROM
+            MaintenanceRecords
+        LEFT JOIN
+            Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
+        WHERE
+            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%' and 
             MaintenanceRecords.maintenance_date BETWEEN '$start_date' and '$end_date'";
+        // $query = "
+        // SELECT
+        //     Vehicles.vehicle_number,
+        //     MaintenanceRecords.Maintenance_type,
+        //     MaintenanceRecords.Description,
+        //     MaintenanceRecords.Cost,
+        //     date(MaintenanceRecords.maintenance_date) maintenance_date
+        // FROM
+        //     MaintenanceRecords
+        // LEFT JOIN
+        //     Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
+        //     WHERE maintenancerecords.vehicle_id like '%$vehicle_id' and 
+        //     MaintenanceRecords.maintenance_date BETWEEN '$start_date' and '$end_date'";
     }
     $result = $conn->query($query);
     if ($result) {

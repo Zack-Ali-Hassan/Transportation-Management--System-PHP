@@ -6,34 +6,90 @@ function read_fuel_report($conn)
     extract($_POST);
     $data = array();
     $message = array();
-    if($report_type == "All"){
+    if ($report_type == "All") {
         $query = "
         SELECT
         Vehicles.vehicle_number,
         fuelrecords.fuel_type,
         fuelrecords.Quantity,
         fuelrecords.Cost,
-        date(fuelrecords.fueling_date) as fuel_date
-        FROM
+        DATE(fuelrecords.fueling_date) AS fuel_date
+    FROM
         fuelrecords
-        LEFT JOIN
-            Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
-            WHERE fuelrecords.vehicle_id like '%$vehicle_id'";
-    }
-    else{
-        $query = "
-        SELECT
+    LEFT JOIN
+        Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+    WHERE
+        fuelrecords.vehicle_id LIKE '%$vehicle_id%'
+    
+    UNION ALL
+    
+    SELECT
+        'Total',
+        '',
+        '',
+        COALESCE(SUM(fuelrecords.Cost), 0),
+        ''
+    FROM
+        fuelrecords
+    LEFT JOIN
+        Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+    WHERE
+        fuelrecords.vehicle_id LIKE '%$vehicle_id%'";
+        // $query = "
+        // SELECT
+        // Vehicles.vehicle_number,
+        // fuelrecords.fuel_type,
+        // fuelrecords.Quantity,
+        // fuelrecords.Cost,
+        // date(fuelrecords.fueling_date) as fuel_date
+        // FROM
+        // fuelrecords
+        // LEFT JOIN
+        //     Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+        //     WHERE fuelrecords.vehicle_id like '%$vehicle_id'";
+    } else {
+        $query = "SELECT
         Vehicles.vehicle_number,
         fuelrecords.fuel_type,
         fuelrecords.Quantity,
         fuelrecords.Cost,
-        date(fuelrecords.fueling_date) as fuel_date
-        FROM
+        DATE(fuelrecords.fueling_date) AS fuel_date
+    FROM
         fuelrecords
-        LEFT JOIN
-            Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
-            WHERE fuelrecords.vehicle_id like '%$vehicle_id' and 
+    LEFT JOIN
+        Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+    WHERE
+        fuelrecords.vehicle_id LIKE '%$vehicle_id%' and 
+        fuelrecords.fueling_date BETWEEN '$start_date' and '$end_date'
+    
+    UNION ALL
+    
+    SELECT
+        'Total',
+        '',
+        '',
+        COALESCE(SUM(fuelrecords.Cost), 0),
+        ''
+    FROM
+        fuelrecords
+    LEFT JOIN
+        Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+    WHERE
+        fuelrecords.vehicle_id LIKE '%$vehicle_id%' and 
             fuelrecords.fueling_date BETWEEN '$start_date' and '$end_date'";
+        //  $query = "
+        //  SELECT
+        //  Vehicles.vehicle_number,
+        //  fuelrecords.fuel_type,
+        //  fuelrecords.Quantity,
+        //  fuelrecords.Cost,
+        //  date(fuelrecords.fueling_date) as fuel_date
+        //  FROM
+        //  fuelrecords
+        //  LEFT JOIN
+        //      Vehicles ON fuelrecords.vehicle_id = Vehicles.vehicle_id
+        //      WHERE fuelrecords.vehicle_id like '%$vehicle_id' and 
+        //      fuelrecords.fueling_date BETWEEN '$start_date' and '$end_date'";
     }
     $result = $conn->query($query);
     if ($result) {

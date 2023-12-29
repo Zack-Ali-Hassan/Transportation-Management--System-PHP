@@ -75,8 +75,8 @@ include_once "../includes/header.php";
                     <div class="mb-3">
                       <label for="exampleFormControlInput1" class="form-label">Fuel Type</label>
                       <select class="form-control" name="fuel_type" id="fuel_type">
-                        <option value="baasin">Baasin</option>
-                        <option value="naafto">Naafto</option>
+                        <option value="Baasin">Baasin</option>
+                        <option value="Naafto">Naafto</option>
                       </select>
                     </div>
                     <div class="mb-3">

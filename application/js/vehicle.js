@@ -178,6 +178,7 @@ function fetch_vehicle(id) {
         $("#vehicle_number").val(response[0].vehicle_number);
         $("#type").val(response[0].type);
         $("#fuel_type").val(response[0].fuel_type);
+        console.log("Fuel type: " + response[0].fuel_type);
         $("#capacity").val(response[0].capacity);
         $("#location").val(response[0].location);
         $("#status").val(response[0].status);
