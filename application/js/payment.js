@@ -10,6 +10,11 @@ $("#form_payments").on("submit", (event) => {
   let amount = $("#amount").val();
   let payment_method = $("#payment_method").val();
   let id = $("#update_info").val();
+  if (customer_id == "") {
+    displayAlert("error", "Please enter a customer");
+  } else if (amount == "") {
+    displayAlert("error", "Please enter amount");
+  }  else {
   let sending_data = {};
   if (btn_Action == "Insert") {
     sending_data = {
@@ -42,11 +47,14 @@ $("#form_payments").on("submit", (event) => {
         btn_Action = "Insert";
         loadData();
       }
+      else {
+        displayAlert("error", response);
+      }
     },
     error: function (data) {
-      alert("Unknown error...");
+      displayAlert("error", data.responseText);
     },
-  });
+  });}
 });
 
 function loadData() {
@@ -78,9 +86,20 @@ function loadData() {
         $("#table_payments tbody").append(tr);
         $("#table_payments").DataTable()
       }
+      else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
+      }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -98,15 +117,26 @@ function fillCustomer() {
       let response = data.message;
       let html ="";
       if (status) {
-        html += ` <option value="0">Select Customer</option>`;
+        html += ` <option value="">Select Customer</option>`;
         response.forEach((item) => {
         html += ` <option value=${item['customer_id']}>${item['name']}</option>`;
         });
         $("#customer_name").append(html);
       }
+      else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
+      }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -134,11 +164,20 @@ function delete_payment(id) {
         // alert(response);
         loadData();
       }
+      else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
+      }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -164,11 +203,12 @@ function fetch_payment(id) {
         $("#amount").val(response[0].Amount);
         $("#payment_method").val(response[0].payment_method);
       }
+      else {
+        displayAlert("error", response);
+      }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }

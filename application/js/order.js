@@ -14,49 +14,63 @@ $("#form_orders").on("submit", (event) => {
   let vehicle_id = $("#vehicle").val();
   let status = $("#type").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_order",
-      pickup_location,
-      delivery_location,
-      weight,
-      vehicle_id,
-      customer_id,
-      status
-    };
+  if (pickup_location == "") {
+    displayAlert("error", "Please enter a pickup location");
+  } else if (delivery_location == "") {
+    displayAlert("error", "Please enter a delivery location");
+  } else if (weight == "") {
+    displayAlert("error", "Please enter a weight of the item");
+  } else if (customer_id == "") {
+    displayAlert("error", "Please select a customer");
+  } else if (vehicle_id == "") {
+    displayAlert("error", "Please select a vehicle");
   } else {
-    sending_data = {
-      id,
-      pickup_location,
-      delivery_location,
-      weight,
-      vehicle_id,
-      customer_id,
-      status,
-      action: "update_order",
-    };
-  }
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_order",
+        pickup_location,
+        delivery_location,
+        weight,
+        vehicle_id,
+        customer_id,
+        status,
+      };
+    } else {
+      sending_data = {
+        id,
+        pickup_location,
+        delivery_location,
+        weight,
+        vehicle_id,
+        customer_id,
+        status,
+        action: "update_order",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/order_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/order_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -86,11 +100,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_orders tbody").append(tr);
-        $("#table_orders").DataTable()
+        $("#table_orders").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -106,17 +130,17 @@ function fillCustomer() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += ` <option value="0">Select Customer</option>`;
+        html += ` <option value="">Select Customer</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['customer_id']}>${item['name']}</option>`;
+          html += ` <option value=${item["customer_id"]}>${item["name"]}</option>`;
         });
         $("#customer_name").append(html);
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      alert("Unknow error");
     },
   });
 }
@@ -132,17 +156,17 @@ function fillVehicle() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += ` <option value="0">Select vehicle</option>`;
+        html += ` <option value="">Select vehicle</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['vehicle_id']}>${item['vehicle_number']}</option>`;
+          html += ` <option value=${item["vehicle_id"]}>${item["vehicle_number"]}</option>`;
         });
         $("#vehicle").append(html);
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      alert("Unknow error");
     },
   });
 }
@@ -165,16 +189,24 @@ function delete_order(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -204,12 +236,12 @@ function fetch_order(id) {
         // console.log("Customer id is : " + response[0].customer_id);
         // console.log("Vehicle id is : " + response[0].vehicle_id);
         $("#type").val(response[0].status);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -224,7 +256,6 @@ $("#table_orders").on("click", "a.delete_info", function () {
     delete_order(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

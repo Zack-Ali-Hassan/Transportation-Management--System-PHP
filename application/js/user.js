@@ -16,60 +16,76 @@ $("#btn_add_user").on("click", function () {
 $("#form_user").on("submit", function (event) {
   event.preventDefault();
 
-  // let name = $("#username").val();
-  // let email = $("#email").val();
-  // let password = $("#password").val();
+  let name = $("#username").val();
+  let email = $("#email").val();
+  let password = $("#password").val();
   // let user_image = $("#user_image").files[0]();
-  // let type = $("#type").val();
-  // let status = $("#status").val();
-  // let id = $("#update_info").val();
+  let type = $("#type").val();
+  let status = $("#status").val();
+  let id = $("#update_info").val();
   let sending_data = new FormData($("#form_user")[0]);
-  if (btn_Action == "Insert") {
-    sending_data.append("action", "register_user");
-    // sending_data = {
-    //   action: "register_user",
-    //   email,
-    //   password,
-    //   user_image,
-    //   type,
-    //   status,
-    // };
-  } else {
-    sending_data.append("action", "update_user");
-    // sending_data = {
-    //   id,
-    //   name,
-    //   gender,
-    //   address,
-    //   mobile,
-    //   email,
-    //   action: "update_user",
-    // };
+  //checking inputs
+  function isValidEmail(email) {
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailPattern.test(email);
   }
+  const isValid = isValidEmail(email);
+  if (name == "") {
+    displayAlert("error", "Please enter a username");
+  } else if (email == "") {
+    displayAlert("error", "Please enter a email");
+  } else if (password == "") {
+    displayAlert("error", "Please enter a password");
+  } else if (!isValid) {
+    displayAlert("error", "Please enter a valid email");
+  } else {
+    if (btn_Action == "Insert") {
+      sending_data.append("action", "register_user");
+      // sending_data = {
+      //   action: "register_user",
+      //   email,
+      //   password,
+      //   user_image,
+      //   type,
+      //   status,
+      // };
+    } else {
+      sending_data.append("action", "update_user");
+      // sending_data = {
+      //   id,
+      //   name,
+      //   gender,
+      //   address,
+      //   mobile,
+      //   email,
+      //   action: "update_user",
+      // };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/user_api.php",
-    data: sending_data,
-    processData: false,
-    contentType: false,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/user_api.php",
+      data: sending_data,
+      processData: false,
+      contentType: false,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
 
-        btn_Action = "Insert";
-        loadData();
-      } else {
-        displayAlert("error", response);
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -112,12 +128,20 @@ function loadData() {
         $("#table_user tbody").append(tr);
 
         $("#table_user").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -144,12 +168,20 @@ function delete_user(id) {
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -177,12 +209,12 @@ function fetch_user(id) {
         $("#show_image").attr("src", `../uploads/${response[0].user_image}`);
         $("#type").val(response[0].type);
         $("#status").val(response[0].status);
+      } else {
+        displayAlert("error", response);
       }
     },
     error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      displayAlert("error", data.responseText);
     },
   });
 }

@@ -13,48 +13,58 @@ $("#form_system_link").on("submit", function (event) {
   let link = $("#link").val();
   let category_id = $("#category_id").val();
   let id = $("#update_info").val();
-  let sending_data = {}
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_system_link",
-      link_icon,
-      link_name,
-      link,
-      category_id,
-    };
-  } else {
-    sending_data = {
-      id,
-      link_icon,
-      link_name,
-      link,
-      category_id,
-      action: "update_system_link",
-    };
+  if (link_icon == "") {
+    displayAlert("error", "Please enter a link icon");
+  } else if (link_name == "") {
+    displayAlert("error", "Please enter a link name");
+  } else if (link == "") {
+    displayAlert("error", "Please select link");
+  } else if (category_id == "") {
+    displayAlert("error", "Please select a category");
   }
+   else {
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_system_link",
+        link_icon,
+        link_name,
+        link,
+        category_id,
+      };
+    } else {
+      sending_data = {
+        id,
+        link_icon,
+        link_name,
+        link,
+        category_id,
+        action: "update_system_link",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/system_links_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/system_links_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
 
-        btn_Action = "Insert";
-        loadData();
-      } else {
-        displayAlert("error", data.data);
-      }
-    },
-    error: function (data) {
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", data.data);
+        }
+      },
+      error: function (data) {
         displayAlert("error", data);
-    //   alert("Unknown error...");
-    },
-  });
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -77,7 +87,7 @@ function loadData() {
         response.forEach((item) => {
           tr += "<tr>";
           for (let data in item) {
-              tr += `<td>${item[data]}</td>`;
+            tr += `<td>${item[data]}</td>`;
           }
           tr += `<td class="d-flex"><a class="btn btn-primary update_info m-2" update_info =${item["link_id"]} ><i class="fas fa-edit"></i></a>
               <a class="btn btn-danger delete_info m-2" delete_info =${item["link_id"]}><i class="fas fa-trash"></i></a></td>`;
@@ -86,16 +96,20 @@ function loadData() {
         $("#table_system_link tbody").append(tr);
 
         $("#table_system_link").DataTable();
-      }
-      else{
-        displayAlert("error", response);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-        displayAlert("error", data.responseText);
-    //   alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -115,20 +129,23 @@ function fillLink() {
       if (status) {
         let html = "";
         response.forEach((item) => {
-          html +=`<option value="${item}">${item}</option>`;
-         
+          html += `<option value="${item}">${item}</option>`;
         });
         $("#link").append(html);
-      }
-      else{
-        displayAlert("error", response);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-        // displayAlert("error", data.responseText);
-      alert(data.responseText);
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -148,20 +165,23 @@ function fillCategory() {
       if (status) {
         let html = "";
         response.forEach((item) => {
-          html +=`<option value="${item["category_id"]}">${item["category_name"]}</option>`;
-         
+          html += `<option value="${item["category_id"]}">${item["category_name"]}</option>`;
         });
         $("#category_id").append(html);
-      }
-      else{
-        displayAlert("error", response);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-        displayAlert("error", data.responseText);
-    //   alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -188,12 +208,11 @@ function delete_system_link(id) {
         });
         // alert(response);
         loadData();
-      }
-      else{
+      } else {
         Swal.fire({
           title: "Error",
           text: response,
-          icon: "danger",
+          icon: "warning",
         });
       }
     },
@@ -201,11 +220,8 @@ function delete_system_link(id) {
       Swal.fire({
         title: "Error",
         text: data.responseText,
-        icon: "danger",
+        icon: "warning",
       });
-    // displayAlert("error", data.responseText);
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
     },
   });
 }
@@ -231,14 +247,13 @@ function fetch_system_link(id) {
         $("#link_name").val(response[0].link_name);
         $("#link").val(response[0].link);
         $("#category_id").val(response[0].category_id);
-      }
-      else{
+      } else {
         displayAlert("error", response);
       }
     },
     error: function (data) {
-        displayAlert("error", data.responseText);
-    //   alert("Unknown error...");
+      displayAlert("error", data.responseText);
+      //   alert("Unknown error...");
       // let errorMessage = xhr.responseText;
       // alert("Error: " + errorMessage);
     },

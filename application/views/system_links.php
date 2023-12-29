@@ -73,13 +73,13 @@ include_once "../includes/header.php";
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Link</label>
                                             <select class="form-control" name="link" id="link">
-                                                <option value="0">Select Link</option>
+                                                <option value="">Select Link</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <label for="exampleFormControlInput1" class="form-label">Category</label>
                                             <select class="form-control" name="category_id" id="category_id">
-                                                <option value="0">Select Category</option>
+                                                <option value="">Select Category</option>
                                             </select>
                                         </div>
 

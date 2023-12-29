@@ -10,43 +10,52 @@ $("#form_invoice").on("submit", (event) => {
   let amount = $("#amount").val();
   let payment_status = $("#payment_status").val();
   let id = $("#update_info").val();
-  let sending_data = {};
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_invoice",
-      customer_id,
-      amount,
-      payment_status
-    };
-  } else {
-    sending_data = {
-      id,
-      customer_id,
-      amount,
-      payment_status,
-      action: "update_invoice",
-    };
-  }
+  if (customer_id == "") {
+    displayAlert("error", "Please enter a customer");
+  } else if (amount == "") {
+    displayAlert("error", "Please enter amount");
+  }  else {
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_invoice",
+        customer_id,
+        amount,
+        payment_status,
+      };
+    } else {
+      sending_data = {
+        id,
+        customer_id,
+        amount,
+        payment_status,
+        action: "update_invoice",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/invoice_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
-      
-        btn_Action = "Insert";
-        loadData();
-      }
-    },
-    error: function (data) {
-      alert("Unknown error...");
-    },
-  });
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/invoice_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
+
+          btn_Action = "Insert";
+          loadData();
+        }
+        else {
+          displayAlert("error", response);
+        }
+      },
+      error: function (data) {
+        displayAlert("error", data.responseText);
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -76,11 +85,21 @@ function loadData() {
           tr += "</tr>";
         });
         $("#table_invoice tbody").append(tr);
-        $("#table_invoice").DataTable()
+        $("#table_invoice").DataTable();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -96,17 +115,27 @@ function fillCustomer() {
     success: function (data) {
       let status = data.status;
       let response = data.message;
-      let html ="";
+      let html = "";
       if (status) {
-        html += ` <option value="0">Select Customer</option>`;
+        html += ` <option value="">Select Customer</option>`;
         response.forEach((item) => {
-        html += ` <option value=${item['customer_id']}>${item['name']}</option>`;
+          html += ` <option value=${item["customer_id"]}>${item["name"]}</option>`;
         });
         $("#customer_name").append(html);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-      alert("Unknow error")
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -129,16 +158,24 @@ function delete_invoice(id) {
         Swal.fire({
           title: "Good job",
           text: response,
-          icon: "success"
+          icon: "success",
         });
         // alert(response);
         loadData();
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -163,12 +200,12 @@ function fetch_invoice(id) {
         $("#customer_name").val(response[0].customer_id);
         $("#amount").val(response[0].amount);
         $("#payment_status").val(response[0].payment_status);
+      } else {
+        displayAlert("error", response);
       }
     },
-    error: function (xhr, status, error) {
-      alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+    error: function (data) {
+      displayAlert("error", data.responseText);
     },
   });
 }
@@ -183,7 +220,6 @@ $("#table_invoice").on("click", "a.delete_info", function () {
     delete_invoice(id);
   }
 });
-
 
 function displayAlert(type, message) {
   let success = document.querySelector(".alert-success");

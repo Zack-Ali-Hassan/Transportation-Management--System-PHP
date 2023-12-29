@@ -10,46 +10,54 @@ $("#form_category").on("submit", function (event) {
   let category_icon = $("#category_icon").val();
   let role = $("#role").val();
   let id = $("#update_info").val();
-  let sending_data = {}
-  if (btn_Action == "Insert") {
-    sending_data = {
-      action: "register_category",
-      category_name,
-      category_icon,
-      role,
-    };
+  if (category_name == "") {
+    displayAlert("error", "Please enter a category name");
+  } else if (category_icon == "") {
+    displayAlert("error", "Please enter a category icon");
+  } else if (role == "") {
+    displayAlert("error", "Please select a role");
   } else {
-    sending_data = {
-      id,
-      category_name,
-      category_icon,
-      role,
-      action: "update_category",
-    };
-  }
+    let sending_data = {};
+    if (btn_Action == "Insert") {
+      sending_data = {
+        action: "register_category",
+        category_name,
+        category_icon,
+        role,
+      };
+    } else {
+      sending_data = {
+        id,
+        category_name,
+        category_icon,
+        role,
+        action: "update_category",
+      };
+    }
 
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/category_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        displayAlert("success", response);
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/category_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          displayAlert("success", response);
 
-        btn_Action = "Insert";
-        loadData();
-      } else {
-        displayAlert("error", data.data);
-      }
-    },
-    error: function (data) {
+          btn_Action = "Insert";
+          loadData();
+        } else {
+          displayAlert("error", data.data);
+        }
+      },
+      error: function (data) {
         displayAlert("error", data);
-    //   alert("Unknown error...");
-    },
-  });
+        //   alert("Unknown error...");
+      },
+    });
+  }
 });
 
 function loadData() {
@@ -72,7 +80,7 @@ function loadData() {
         response.forEach((item) => {
           tr += "<tr>";
           for (let data in item) {
-              tr += `<td>${item[data]}</td>`;
+            tr += `<td>${item[data]}</td>`;
           }
           tr += `<td class="d-flex"><a class="btn btn-primary update_info m-2" update_info =${item["category_id"]} ><i class="fas fa-edit"></i></a>
               <a class="btn btn-danger delete_info m-2" delete_info =${item["category_id"]}><i class="fas fa-trash"></i></a></td>`;
@@ -81,16 +89,20 @@ function loadData() {
         $("#table_category tbody").append(tr);
 
         $("#table_category").DataTable();
-      }
-      else{
-        displayAlert("error", response);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-        displayAlert("error", data.responseText);
-    //   alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -117,16 +129,20 @@ function delete_category(id) {
         });
         // alert(response);
         loadData();
-      }
-      else{
-        displayAlert("error", response);
+      } else {
+        Swal.fire({
+          title: "Warning",
+          text: response,
+          icon: "warning",
+        });
       }
     },
     error: function (data) {
-    //   alert("Unknown error...");
-    displayAlert("error", data.responseText);
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      Swal.fire({
+        title: "Warning",
+        text: data.responseText,
+        icon: "warning",
+      });
     },
   });
 }
@@ -151,16 +167,12 @@ function fetch_category(id) {
         $("#category_name").val(response[0].category_name);
         $("#category_icon").val(response[0].category_icon);
         $("#role").val(response[0].role);
-      }
-      else{
+      } else {
         displayAlert("error", response);
       }
     },
     error: function (data) {
-        displayAlert("error", data.responseText);
-    //   alert("Unknown error...");
-      // let errorMessage = xhr.responseText;
-      // alert("Error: " + errorMessage);
+      displayAlert("error", data.responseText);
     },
   });
 }
