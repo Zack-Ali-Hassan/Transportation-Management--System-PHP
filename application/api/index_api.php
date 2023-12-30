@@ -56,7 +56,7 @@ function get_last_orders($conn){
 function get_customer_payment($conn){
     $data =array();
     $message =array();
-    $query = "SELECT customers.name , payments.Amount FROM `payments` left join customers on payments.customer_id = customers.customer_id 
+    $query = "SELECT customers.name , payments.Amount FROM `payments` left join customers on payments.customer_id = customers.customer_id ORDER by payments.payment_id desc limit 5
     "; 
     $result =$conn->query($query);
     if($result){
