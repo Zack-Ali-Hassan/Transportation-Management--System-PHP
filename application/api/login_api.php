@@ -2,6 +2,7 @@
 
 header('Content-Type: application/json');
 include "../config/conn.php";
+// include "auth_link.php";
 function login($conn)
 {
     extract($_POST);
@@ -21,6 +22,7 @@ function login($conn)
             }
         }   
         else{
+           
             session_start();
             
             $_SESSION['user_id']=$row['user_id'];
@@ -30,17 +32,21 @@ function login($conn)
             $_SESSION['user_image']=$row['user_image'];
             $_SESSION['type']=$row['type'];
             $_SESSION['status']=$row['status'];
+           
             // foreach($row as $key =>$value){
             //     $_SESSION[$key] = $value;
             // }
             $message = array("status" => true, "message" => "Login successfull..");
+             // auth_link("hl002");
         }
        
     } else {
         $message = array("status" => false, "message" => $conn->error);
     }
     echo json_encode($message);
+
 }
+
 
 
 if (isset($_POST['action'])) {

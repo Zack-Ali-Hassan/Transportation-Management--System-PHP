@@ -1,9 +1,9 @@
 loadData();
 fillUser();
-$("#user_id").on("change", function(){
+$("#user_id").on("change", function () {
   let value = $(this).val();
   loadUserPermissions(value);
-})
+});
 $("#all_authority").on("change", function () {
   if ($(this).is(":checked")) {
     $("input[type = 'checkbox']").prop("checked", true);
@@ -69,7 +69,7 @@ function loadData() {
                 </fitemeldset>
                 </div>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                 <fieldset class="border border-3 border-dark rounded-3 p-3">
                     <legend class="float-none w-auto px-3 text-dark fw-bold">
                         <input type="checkbox" id="role_authority[]" name="role_authority[]" class="me-3"
@@ -131,7 +131,7 @@ function fillUser() {
       let response = data.message;
       let html = "";
       if (status) {
-        html += ` <option value="0">Select User</option>`;
+        html += ` <option value="">Select User</option>`;
         response.forEach((item) => {
           html += ` <option value="${item["user_id"]}">${item["username"]}</option>`;
         });
@@ -148,7 +148,7 @@ function fillUser() {
 function loadUserPermissions(id) {
   let send_data = {
     action: "get_system_authority_sp",
-    user_id : id
+    user_id: id,
   };
   $.ajax({
     method: "POST",
@@ -159,17 +159,19 @@ function loadUserPermissions(id) {
       let status = data.status;
       let response = data.message;
       if (status) {
-        if(response.length >= 1){
-          response.forEach(user =>{
-            $(`input[type = 'checkbox'][name = 'role_authority[]'][value = '${user['role']}']`).prop('checked', true);
-            $(`input[type = 'checkbox'][name = 'system_links[]'][value = '${user['link_id']}']`).prop('checked', true);
+        if (response.length >= 1) {
+          response.forEach((user) => {
+            $(
+              `input[type = 'checkbox'][name = 'role_authority[]'][value = '${user["role"]}']`
+            ).prop("checked", true);
+            $(
+              `input[type = 'checkbox'][name = 'system_links[]'][value = '${user["link_id"]}']`
+            ).prop("checked", true);
             // $(`input[type = 'checkbox'][name = 'system_actions[]'][value = '${user['action_id']}']`).prop('checked', true);
-          })
+          });
+        } else {
+          $("input[type = 'checkbox']").prop("checked", false);
         }
-        else{
-          $("input[type = 'checkbox']").prop('checked', false);
-        }
-       
       } else {
         alert(response);
       }
@@ -184,60 +186,57 @@ $("#form_user_authority").on("submit", function (event) {
   event.preventDefault();
 
   let user_id = $("#user_id").val();
-  if(user_id == 0){
-    $(".alert-success").removeClass("d-none");
-    $(".alert-danger").addClass("d-none");
-    $(".alert-success").html("Please select user");
-    setTimeout(()=>{
-      $(".alert-success").addClass("d-none");
-    },4000)
-  }
-  let actions = [];
-  $("input[name='system_links[]']").each(function () {
-    // console.log("Links clicked is : " + $(this).val());
-    if ($(this).is(":checked")) {
-      actions.push($(this).val());
-    }
-  });
-  console.log("The user id is : " + user_id);
-  console.log("The action is : " + actions);
-  let sending_data = {};
-  sending_data = {
-    action: "register_user_authority",
-    user_id,
-    action_id: actions,
-  };
-  $.ajax({
-    method: "POST",
-    dataType: "JSON",
-    url: "../api/user_authority_api.php",
-    data: sending_data,
-    success: function (data) {
-      let status = data.status;
-      let response = data.message;
-      if (status) {
-        $(".alert-success").removeClass("d-none");
-        $(".alert-danger").addClass("d-none");
-        $(".alert-success").html(response);
-        setTimeout(()=>{
-          $(".alert-success").addClass("d-none");
-        },3000)
-        
-      } else {
-        let ul = "<ul>";
-        $(".alert-danger").removeClass("d-none");
-        $(".alert-success").addClass("d-none");
-        response.forEach((res) => {
-          ul += `<li>${res["message"]}</li>`;
-        });
-        ul += "</ul>";
-        $(".alert-danger").html(ul);
+  if (user_id == "") {
+    $(".alert-danger").removeClass("d-none");
+    $(".alert-success").addClass("d-none");
+    $(".alert-danger").html("Please select user");
+    setTimeout(() => {
+      $(".alert-danger").addClass("d-none");
+    }, 4000);
+  } else {
+    let actions = [];
+    $("input[name='system_links[]']").each(function () {
+      // console.log("Links clicked is : " + $(this).val());
+      if ($(this).is(":checked")) {
+        actions.push($(this).val());
       }
-    },
-    error: function (data) {
-     
-      // displayAlert("error", data);
-      // alert("Unknown error..." + data.responseText);
-    },
-  });
+    });
+    let sending_data = {};
+    sending_data = {
+      action: "register_user_authority",
+      user_id,
+      action_id: actions,
+    };
+    $.ajax({
+      method: "POST",
+      dataType: "JSON",
+      url: "../api/user_authority_api.php",
+      data: sending_data,
+      success: function (data) {
+        let status = data.status;
+        let response = data.message;
+        if (status) {
+          $(".alert-success").removeClass("d-none");
+          $(".alert-danger").addClass("d-none");
+          $(".alert-success").html(response);
+          setTimeout(() => {
+            $(".alert-success").addClass("d-none");
+          }, 3000);
+        } else {
+          let ul = "<ul>";
+          $(".alert-danger").removeClass("d-none");
+          $(".alert-success").addClass("d-none");
+          response.forEach((res) => {
+            ul += `<li>${res["message"]}</li>`;
+          });
+          ul += "</ul>";
+          $(".alert-danger").html(ul);
+        }
+      },
+      error: function (data) {
+        // displayAlert("error", data);
+        // alert("Unknown error..." + data.responseText);
+      },
+    });
+  }
 });

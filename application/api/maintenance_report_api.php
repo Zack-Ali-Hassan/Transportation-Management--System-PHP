@@ -19,7 +19,7 @@ function read_maintenance_report($conn)
         LEFT JOIN
             Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
         WHERE
-            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%'
+            MaintenanceRecords.vehicle_id = '$vehicle_id'
 
         UNION ALL
         SELECT
@@ -33,7 +33,7 @@ function read_maintenance_report($conn)
         LEFT JOIN
             Vehicles ON MaintenanceRecords.vehicle_id = Vehicles.vehicle_id
         WHERE
-            MaintenanceRecords.vehicle_id LIKE '%$vehicle_id%'";
+        MaintenanceRecords.vehicle_id = '$vehicle_id'";
         // $query = "
         // SELECT
         //     Vehicles.vehicle_number,

@@ -2,8 +2,6 @@
     <p class="mb-0 fs-4">Design and Developed by <a href="" target="_blank" class="pe-1 text-primary text-decoration-underline">huwanta.com</a></p>
 </div>
 </div>
-</div>
-</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -24,36 +22,6 @@
 <script src="../ztoaster-main/ztoaster.min.js"></script>
 <script>
  
-  // $(document).ready( function () {
-  //   $('#table_user').DataTable();
-  // }); 
-  // // $(document).ready( function () {
-  // //   $('#table_customer').DataTable();
-  // // });
-  // $(document).ready( function () {
-  //   $('#table_routes').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_vehicle').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_driver').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_fuel_record').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_maintenance_record').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_orders').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_invoice').DataTable();
-  // });
-  // $(document).ready( function () {
-  //   $('#table_payments').DataTable();
-  // });
 </script>
 
 
